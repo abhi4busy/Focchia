@@ -1,0 +1,371 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<title>فوشيا | مرآة  المرأة</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="themes/foochia.css" />
+<link rel="stylesheet" href="themes/jquery.mobile.structure-1.4.5.min.css" />
+
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/jquery.mobile-1.4.5.min.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+<script src="js/pageswipe.js"></script>
+<script src="js/jquery.plainoverlay.min.js"></script>
+<script src="js/mustache.js"></script>
+<script src="js/json-caller.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-41065959-3', 'auto');
+  ga('send', 'pageview');
+
+</script> 
+
+
+<script>
+$(document).on("mobileinit", function(){
+	$.mobile.ignoreContentEnabled = true;
+	$.mobile.defaultPageTransition = "none";
+});
+
+
+$(document).on("pageinit",function(){
+  var pathname = $(location).attr('href');
+  var leva = $('#le').attr("href");
+  var prava = $('#pr').attr("href");
+
+  $(".pageswipe1").on("swiperight",function(){
+    location.href=prava;
+  });                       
+  $(".pageswipe1").on("swipeleft",function(){
+    location.href=leva;
+  });
+});
+</script>
+</head>
+<script id="genericErrorTpl" type="text/template">
+	{{message}}
+</script>
+<script type="text/javascript">
+ $(document).ready(function() {
+	var applaunchCount = window.localStorage.getItem('launchCount');
+if(applaunchCount){
+}else{
+//Local storage is not set, hence first time launch. set the local storage item
+window.localStorage.setItem('launchCount',1);
+  $.mobile.changePage('#introMain', {transition: "slide", reverse: false}, true, true);
+}
+}); 
+</script>
+<script id="sliderDivTmp" type="text/template">
+{{#articles}}
+  <div class="swiper-slide">
+	<a href="#{{id}}" data-role="button" data-rel="page" data-transition="slide"><img src="{{image}}" alt=""></a>
+	<h2 class="caption"><a href="#{{id}}" data-role="button" data-rel="page" data-transition="slide"> {{title}}</a></h2>
+  </div>
+{{/articles}}
+</script>
+<script id="articleDivTmp" type="text/template">
+{{#articles}}
+<li class="grid">
+  <a class="thumb" href="#{{id}}" data-role="button" data-rel="page" data-transition="slide"><img src="{{image}}" alt=""></a>
+  <div class="gridholder">
+  <h2 class="caption"><a href="#{{id}}" data-rel="page" data-transition="slide"> {{title}}</a></h2>
+  <!--<p class="subtitle"> {{summary}} </p> <time class="date"> {{date}} </time> -->
+  </div>
+</li>
+{{/articles}}        
+</script>
+<script id="pageDivTmp" type="text/template">
+{{#articles}}
+<div data-role="page" id="{{id}}" class="demo-page" data-theme="a" data-dom-cache="true" data-prev="{{idPrv}}" data-next="{{idNext}}" data-url="{{id}}">
+<div id="header" data-position="fixed" data-fullscreen="true" data-tap-toggle="false" data-role="header" data-theme="a" data-tap-toggle="false">
+<a href="#{{menuId}}" data-theme="a" class="menu"><img src="images/menu.png" alt=""></a>
+<a href="index.html" data-ajax="false" class="logo"><img src="images/logo.png" alt=""></a>
+</div>
+<div data-role="content" class="detailspage">
+<h1 class="title title_entertement">ترفيه <a  class="bkcbtn back black"><span></span>عودة  </a></h1>
+<h2 class="subtitle"> {{title}} </h2>
+<time class="timeanddate">{{published}}</time>
+<!--<p class="detailstitle">{{summary}}</p>-->
+<!-- if({{video}}=='no video'){
+<div class="itemimg"><img src="{{image}}" alt=""></div>
+}else{
+<div class="itemimg" style="text-align: center"><iframe width="560" height="315" src={{video}} frameborder="0" allowfullscreen></iframe></div>
+} -->
+{{#video}}
+<div class="itemimg" style="text-align: center"><iframe width="560" height="315" src={{video}} frameborder="0" allowfullscreen></iframe></div>
+    {{/video}}
+    {{^video}} 
+<div class="itemimg"><img src="{{image}}" alt=""></div>
+    {{/video}}
+<div class="content">
+{{{content}}}
+</div>
+<div class="social">
+<a class="socialicons watz" onclick="window.plugins.socialsharing.shareViaWhatsApp('{{title}}', '{{image}}' /* img */, '{{link}}' /* url */, function() {}, function(errormsg){})"></a>
+<a class="socialicons tw" onclick="window.plugins.socialsharing.shareViaTwitter('{{title}}', '{{image}}' /* img */, '{{link}}' /* url */, function() {}, function(errormsg){})"></a>
+<a class="socialicons fb" onclick="window.plugins.socialsharing.shareViaFacebook('{{title}}', '{{image}}', '{{link}}', function(){}, function(msg) {})""></a>
+<a class="socialicons go" onclick="window.plugins.socialsharing.shareVia('com.google.android.apps.plus', null, null, null, '{{link}}', function(){}, function(msg) {})"></a>
+</div>
+
+</div>  
+ 
+<div data-role="content">
+<!-- Rest data -->
+</div>
+<div data-role="panel" id="{{menuId}}" data-theme="a">
+<h2 class="menutitle">القائمة</h2>
+<ul>
+	<li><a href="index.html" data-ajax="false">الرئيسية</a></li>
+	<li><a href="beauty.html" data-ajax="false">جمالك</a></li>
+	<li><a href="fashion.html" data-ajax="false">موضة</a></li>
+	<li><a href="health_fitness.html" data-ajax="false">صحة ورشاقة</a></li>
+	<li><a href="weddings.html" data-ajax="false">زفاف</a></li>	
+	<li><a href="celebrities.html" data-ajax="false">مشاهير</a></li>
+	<li><a href="life.html" data-ajax="false">حياتك</a></li>
+	<li><a href="technology.html" data-ajax="false">تكنولوجيا</a></li>
+	<li><a href="foochia_kitchen.html" data-ajax="false">مطبخ فوشيا</a></li>
+	<li><a href="interiors.html" data-ajax="false">ديكور</a></li>
+	<li><a href="shopping.html" data-ajax="false">أسواق</a></li>	
+	<li><a href="entertainment.html" data-ajax="false">ترفيه</a></li>
+</ul>
+</div>
+</div>
+{{/articles}}
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+	setupEntertainmentDetails();	
+} );
+</script>
+ <script type='text/javascript'>
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+(function() {
+var gads = document.createElement('script');
+gads.async = true;
+gads.type = 'text/javascript';
+var useSSL = 'https:' == document.location.protocol;
+gads.src = (useSSL ? 'https:' : 'http:') + '//www.googletagservices.com/tag/js/gpt.js';
+var node = document.getElementsByTagName('script')[0];
+node.parentNode.insertBefore(gads, node);
+})();
+</script>
+<script type='text/javascript'>
+googletag.cmd.push(function() {
+googletag.defineSlot('/320084991/foochia',[320, 50], 'div-gpt-ad-1432185179494-0').addService(googletag.pubads());
+googletag.pubads().enableSingleRequest();
+googletag.enableServices();
+});
+</script>
+<script type="text/javascript">
+$(window).on("navigate", function (event, data) {
+  var direction = data.state.direction;
+  if (direction == 'back') {
+  }
+  if (direction == 'forward') {
+  }
+});
+</script>
+<body class="entertainment_page">
+<div style="display:none">
+<a id="pr" href="shopping.html">left</a>
+<a id="le" href="index.html">right</a>
+</div>
+
+<div id="offline" style="display:none;">
+      <p>الاتصال بالانترنت  غير متاح ,</p>
+</div>
+<div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count"></div>
+<div data-url="home" data-role="page" id="home" class="homepage pageswipe1" data-dom-cache="true" data-theme="a" >
+  <div id="header" data-role="header" data-theme="a"> <a href="#mainmenu" data-theme="a" class="menu"><img src="images/menu.png" alt=""></a> <a href="index.html" data-ajax="false" class="logo"><img src="images/logo.png" alt=""></a> </div>
+  <div data-role="content">
+    <h1 class="title title_entertement">ترفيه
+    <!--<div id="clickbuttons">
+        <a class="grid">Grid View</a>
+        <a class="list">List View</a>
+    </div>-->
+    <div id="viewcontrols">
+       <a class="viewswitch gridview"></a>
+       <a class="viewswitch listview"></a>
+	</div>
+    </h1>
+    
+    <div class="swiper-container">
+      <div id="sliderDiv" class="swiper-wrapper"> </div>
+      <div class="swiper-pagination"></div>
+    </div>
+
+    <ul id="content" class="listview maincontent">
+    </ul>
+    <a href="#" class="loadmore"  id="loadMore">عرض المزيد</a>
+  </div>
+ <div class="adspace">
+    <div id='div-gpt-ad-1432185179494-0'>
+      <script type='text/javascript'>
+        googletag.cmd.push(function() { googletag.display('div-gpt-ad-1432185179494-0'); });
+        </script>
+    </div>
+  </div>
+  <div data-role="panel" id="mainmenu" data-theme="a">
+    <h2 class="menutitle">القائمة</h2>
+    <ul>
+    <li><a href="index.html" data-ajax="false">الرئيسية</a></li>
+	<li><a href="beauty.html" data-ajax="false">جمالك</a></li>
+	<li><a href="fashion.html" data-ajax="false">موضة</a></li>
+	<li><a href="health_fitness.html" data-ajax="false">صحة ورشاقة</a></li>
+	<li><a href="weddings.html" data-ajax="false">زفاف</a></li>	
+	<li><a href="celebrities.html" data-ajax="false">مشاهير</a></li>
+	<li><a href="life.html" data-ajax="false">حياتك</a></li>
+	<li><a href="technology.html" data-ajax="false">تكنولوجيا</a></li>
+	<li><a href="foochia_kitchen.html" data-ajax="false">مطبخ فوشيا</a></li>
+	<li><a href="interiors.html" data-ajax="false">ديكور</a></li>
+	<li><a href="shopping.html" data-ajax="false">أسواق</a></li>	
+	<li><a href="entertainment.html" data-ajax="false">ترفيه</a></li>
+    </ul>
+  </div>
+ 
+</div>
+ <div data-role="page" id="introMain" style="height:100%;" class="demo-page1" data-theme="a" data-url="introMain">
+  <div data-role="content" style="background:#f1f1f1; height:100%;"> 
+<div class="screen screen_2" style="z-index:2;" id="screenpageone" >
+    	<img src="images/sc_1.jpg" alt="" >
+    	<div class="screenoverlay">
+        	<div class="screenoverlaywrap_hold">
+            	<a class="closebtne" href="#" id="closcreen1" data-transition="fade"><img src="images/closebtn.png" alt="" ></a>
+             <div class="firstscreen_3">
+                <div class="arrowmiddle"><img src="images/viewarrow.png" alt="" > </div>
+                <div class="arrowcontent"> اضغط هنا لمشاهدة القائمة الكاملة </div>
+            </div>
+            
+            
+            
+            <div class="firstscreen_2">
+            	<table>
+                	<tr>
+                    	<td><img src="images/screen_arrow_r.png" alt="" ></td>
+                        <td class="arrowcontent_td">اسحب يميناً او يساراً لمشاهدة المزيد من الأخبار</td>
+                        <td><img src="images/screen_arrow_l.png" alt="" ></td>
+                    </tr>
+                </table>
+ 
+            </div>
+            
+           	<div class="firstscreen_1">
+            <div class="arrowmiddle"><img src="images/full_arrow.png" alt="" > </div>
+            <div class="arrowcontent">اسحب للأعلى او للأسفل لمشاهدة المزيد من الأخبار</div>
+            </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="screen screen_2" style="z-index:1;" id="screenpagetwo">
+    	<img src="images/sc_2.jpg" alt="" >
+    	<div class="screenoverlay">
+        	<div class="screenoverlaywrap_hold">
+            	<a class="closebtne" href="#" id="closcreen2" data-transition="fade"><img src="images/closebtn.png" alt="" ></a>
+             
+            
+            <div class="firstscreen_4">
+                <div class="arrowmiddle"><img src="images/handarrow.png" alt="" > </div>
+                <div class="arrowcontent">  اختر طريقة العرض المناسبة لك </div>
+            </div>
+            
+            
+            <div class="firstscreen_5">
+            	<table>
+                	<tr>
+                    	<td><img src="images/pageswipe_left_arrow.png" alt="" ></td>
+                        <td class="arrowcontent_td"> اسحب يميناّ او يساراً للانتقال إلى القسم التالي أو السابق </td>
+                        <td><img src="images/pageswipe_right_arrow.png" alt="" ></td>
+                    </tr>
+                </table>
+ 
+            </div>
+           	
+            </div>
+        </div>
+    </div>
+    
+    <div class="screen screen_2" style="z-index:0;" id="screenpagethree" >
+    	<img src="images/sc_4.jpg" alt="" >
+    	<div class="screenoverlay">
+        	<div class="screenoverlaywrap_hold">
+            	<a data-ajax="false" class="closebtne" href="index.html" data-transition="fade"><img src="images/closebtn.png" alt="" ></a>
+             <div class="firstscreen_6">
+                <div class="arrowmiddle"><img src="images/viewarrow.png" alt="" > </div>
+                <div class="arrowcontent">اضغط هنا للعودة للصفحة السابقة</div>
+            </div>
+            
+            <div class="firstscreen_5">
+            	<table>
+                	<tr>
+                    	<td><img src="images/pageswipe_left_arrow.png" alt="" ></td>
+                        <td class="arrowcontent_td">اسحب يميناً او يساراً للتنقل بين الأخبار </td>
+                        <td><img src="images/pageswipe_right_arrow.png" alt="" ></td>
+                    </tr>
+                </table>
+ 
+            </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+<script>
+$("#closcreen1").click(function(){
+    $("#screenpageone").hide();
+	$("#screenpagethree").hide();
+	$("#screenpagetwo").show();
+	
+});
+
+$("#closcreen2").click(function(){
+    $("#screenpageone").hide();
+	$("#screenpagetwo").hide();
+	$("#screenpagethree").show();
+});
+
+
+</script>
+
+  <!--  <div class="swiper-container" style="background:#f1f1f1; height:100%;">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <div class="content">
+            <div class="screenimg"><img class="screenlogo" src="images/screen_loading.png" alt=""></div>
+            <h1> مرحبا في تطبيق شبكة إرم الإخبارية</h1>
+            <p> الأخبار بين يديك</p>
+            <p class="skipintro"><a class="skipbtn" href="index.html" data-ajax="false">تخطي</a> </p>
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="content">
+            <div class="screenimg"><img src="images/screen_1.jpg" alt=""></div>
+            <p>اختر أقسامك المفضلة لتصفح المزيد من الأخبار</p>
+            <p class="skipintro"><a class="skipbtn" href="index.html" data-ajax="false">تخطي</a> </p>
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="content">
+            <div class="screenimg"><img src="images/screen_1.jpg" alt=""></div>
+            <p>اختر طريقة العرضة التي تناسبك </p>
+            <p class="skipintro"><a class="skipbtn" href="index.html" data-ajax="false">ابدأ</a> </p>
+          </div>
+        </div>
+      </div>
+    </div>  -->
+  </div>
+</div>
+<script src="js/swiper.js" type="text/javascript"></script>
+<script src="js/comman.js" type="text/javascript" ></script>
+</body>
+</html>
